@@ -21,13 +21,13 @@
 #ifndef EVALRESULTLISTENER_H_
 #define EVALRESULTLISTENER_H_
 
-#include "../Engine/ResultListener.h"
+#include <Engine/ResultListener.h>
 #include <fstream>
 #include <iostream>
 #include <set>
 #include <list>
 #include <math.h>
-#include "../Packets/PubPkt.h"
+#include <Packets/PubPkt.h>
 
 /**
  * The ResultListener used for evaluation: it stores the number of received complex events

@@ -21,11 +21,11 @@
 #ifndef RULESGENERATOR_H_
 #define RULESGENERATOR_H_
 
-#include "../Packets/RulePktValueReference.h"
-#include "../Common/Consts.h"
-#include "../Common/TimeMs.h"
-#include "../Engine/TRexEngine.h"
-#include "../Packets/RulePkt.h"
+#include <Packets/RulePktValueReference.h>
+#include <Common/Consts.h>
+#include <Common/TimeMs.h>
+#include <Engine/TRexEngine.h>
+#include <Packets/RulePkt.h>
 #include "ParamHandler.h"
 #include <set>
 

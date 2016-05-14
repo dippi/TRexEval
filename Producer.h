@@ -22,8 +22,8 @@
 #define PRODUCER_H_
 
 #include <set>
-#include "../Packets/PubPkt.h"
-#include "../Common/Consts.h"
+#include <Packets/PubPkt.h>
+#include <Common/Consts.h>
 #include "ParamHandler.h"
 
 /**

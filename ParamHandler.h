@@ -21,7 +21,7 @@
 #ifndef PARAMHANDLER_H_
 #define PARAMHANDLER_H_
 
-#include "../Common/TimeMs.h"
+#include <Common/TimeMs.h>
 
 #define DEFAULT_STUDY 0
 #define FIRE_STUDY 1

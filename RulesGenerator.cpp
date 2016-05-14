@@ -143,10 +143,11 @@ void RulesGenerator::initConstraints(Constraint *constraints, int constraintsNum
 	constraints[0].type = INT;
 	constraints[0].intVal = (rand()%paramHandler->getNumValues())+1;
 	int op = (rand()%OP_NUM);
-	if (op==0) constraints[0].op = EQ;
-	else if (op==1) constraints[0].op = LT;
-	else if (op==2) constraints[0].op = GT;
-	else if (op==3) constraints[0].op = DF;
+	constraints[0].op = static_cast<Op>(op);
+	// if (op==0) constraints[0].op = EQ;
+	// else if (op==1) constraints[0].op = LT;
+	// else if (op==2) constraints[0].op = GT;
+	// else if (op==3) constraints[0].op = DF;
 	for (int i=1; i<constraintsNum; ) {
 		num = (rand()%paramHandler->getNumNames());
 		if (alreadyUsed.find(num)!=alreadyUsed.end()) continue;
@@ -156,10 +157,11 @@ void RulesGenerator::initConstraints(Constraint *constraints, int constraintsNum
 		constraints[i].type = INT;
 		constraints[i].intVal = (rand()%paramHandler->getNumValues())+1;
 		op = (rand()%OP_NUM);
-		if (op==0) constraints[i].op = EQ;
-		else if (op==1) constraints[i].op = LT;
-		else if (op==2) constraints[i].op = GT;
-		else if (op==3) constraints[i].op = DF;
+		constraints[i].op = static_cast<Op>(op);;
+		// if (op==0) constraints[i].op = EQ;
+		// else if (op==1) constraints[i].op = LT;
+		// else if (op==2) constraints[i].op = GT;
+		// else if (op==3) constraints[i].op = DF;
 		i++;
 	}
 }

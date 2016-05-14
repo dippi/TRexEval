@@ -26,13 +26,13 @@
 #include <pthread.h>
 #include <iostream>
 #include "Producer.h"
-#include "../Packets/PubPkt.h"
-#include "../Packets/RulePkt.h"
-#include "../Engine/TRexEngine.h"
+#include <Packets/PubPkt.h>
+#include <Packets/RulePkt.h>
+#include <Engine/TRexEngine.h>
 #include "ParamHandler.h"
 #include "RulesGenerator.h"
-#include "../Engine/ResultListener.h"
-#include "../Common/Timer.h"
+#include <Engine/ResultListener.h>
+#include <Common/Timer.h>
 
 /**
  * Memory shared between producer and consumer of packets

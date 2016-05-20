@@ -7,8 +7,8 @@ LIBS=../repo/TRex2-lib/src/.libs
 .PHONY: default
 default: main
 
-%: $(SOURCES)
-	$(CXX) $(CXXFLAGS) -o $@ $(SOURCES) -I$(INCLUDES) -L$(LIBS) -lTRex2
+main: $(SOURCES)
+	$(CXX) $(CXXFLAGS) -o main $(SOURCES) -I$(INCLUDES) -L$(LIBS) -lTRex2
 	
 run:
 	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(LIBS) ./main

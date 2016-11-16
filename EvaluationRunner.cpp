@@ -19,6 +19,7 @@
 //
 
 #include "EvaluationRunner.h"
+#include <chrono>
 
 using namespace std;
 
@@ -125,13 +126,13 @@ int EvaluationRunner::startEval() {
 	pthread_t prod;
 	pthread_t cons;
 
-	cout << endl << "### Starting evaluation ###" << endl << endl;
-
 	if (pthread_create(&prod, NULL, producer, (void *) &context)!=0) {
 		cout << "Error creating producer" << endl;
 		pthread_mutex_destroy(context.mutex);
 		pthread_cond_destroy(context.cond);
 	}
+
+	auto start = std::chrono::steady_clock::now();
 
 	if (pthread_create(&cons, NULL, consumer, (void *) &context)!=0) {
 		cout << "Error creating consumer" << endl;
@@ -151,6 +152,10 @@ int EvaluationRunner::startEval() {
 	delete context.cond;
 	delete context.mutex;
 
-	cout << endl << endl << "### Evaluation finished ###" << endl << endl;
+	auto end = std::chrono::steady_clock::now();
+	auto diff = chrono::duration<double, milli> (end - start).count();
+	cout << "Time spent: " << diff << " ms" << endl;
+	cout << "Dropped: " << (context.dropped*100/context.paramHandler->getPubNum()) << "%" << endl;
+	
 	return context.dropped;
 }

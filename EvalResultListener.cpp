@@ -50,6 +50,7 @@ void EvalResultListener::printToFile(int label, char const *fileName, double dur
 	if (newLine) file << "\n";
 	if (printLabel) file << label << "\t";
 	file << fixed << msgPerSec << "\t";
+	cout << "Count: " << detectedEvents << " - Throughput: " << msgPerSec << endl;
 	file.close();
 }
 

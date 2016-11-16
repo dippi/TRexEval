@@ -989,6 +989,7 @@ void runWinEach(int seed, ParamHandler *paramHandler, EvalResultListener *result
 			resultListener->printPercProcTime(s, percTimeFile.data(), (w==2 && s!=minMessagesPerSecond), (w==2));
 			ofstream file;
 			file.open(droppedFile.data(), ios::app);
+			
 			if (w==2) {
 				file << s << "\t" << (dropped*100/paramHandler->getPubNum()) << "\t";
 			}

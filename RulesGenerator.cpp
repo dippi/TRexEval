@@ -264,7 +264,7 @@ void RulesGenerator::createLengthRules(set<RulePkt *> &rules) {
 			CompKind kind = getCompKind();
 			pkt->addPredicate(id*1000+j, constraint, 1, j-1, win, kind);
 		}
-		CompositeEventTemplate *ceTemplate = new CompositeEventTemplate(10);
+		CompositeEventTemplate *ceTemplate = new CompositeEventTemplate(id);
 		pkt->setCompositeEventTemplate(ceTemplate);
 		if (paramHandler->getConsuming()) pkt->addConsuming(1);
 		rules.insert(pkt);

@@ -1,8 +1,9 @@
 CXXFLAGS=-Wall -std=c++11 -pthread -DNDBUG -O3
 
 SOURCES=$(wildcard *.cpp)
-INCLUDES=../repo/TRex2-lib/src
-LIBS=../repo/TRex2-lib/src/.libs
+TREX_PATH?=./TRex
+INCLUDES=$(TREX_PATH)/TRex2-lib/src
+LIBS=$(TREX_PATH)/TRex2-lib/src/.libs
 
 .PHONY: default
 default: main

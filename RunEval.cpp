@@ -56,37 +56,14 @@ void runAggregate(int seed, ParamHandler *paramHandler, EvalResultListener *resu
 
 void trex_testing::runEval() {
 	// How many runs?
-	int numRuns = 10;
+	int numRuns = 1;
 
 	ParamHandler *paramHandler = new ParamHandler();
 	EvalResultListener *resultListener = new EvalResultListener;
 
 	// What to run?
 	for (int seed=1; seed<=numRuns; ++seed) {
-		runCoreLast(seed, paramHandler, resultListener);
-		runCoreEach(seed, paramHandler, resultListener);
-		runFireFirst(seed, paramHandler, resultListener);
-		runFireLast(seed, paramHandler, resultListener);
-		runFireEach(seed, paramHandler, resultListener);
-		runRain(seed, paramHandler, resultListener);
-		runLengthLast(seed, paramHandler, resultListener);
-		runLengthEach(seed, paramHandler, resultListener);
-		runLengthFirst(seed, paramHandler, resultListener);
-		runLastConsuming(seed, paramHandler, resultListener);
-		runEachConsuming(seed, paramHandler, resultListener);
-		runNoConsumingEach(seed, paramHandler, resultListener);
-		runWidthLast(seed, paramHandler, resultListener);
-		runWidthEach(seed, paramHandler, resultListener);
-		runWinLast(seed, paramHandler, resultListener);
 		runWinEach(seed, paramHandler, resultListener);
-		runNumRulesLast(seed, paramHandler, resultListener);
-		runNumRulesEach(seed, paramHandler, resultListener);
-		runSelectivityLast(seed, paramHandler, resultListener);
-		runSelectivityEach(seed, paramHandler, resultListener);
-		runNumProcLast(seed, paramHandler, resultListener);
-		runNumProcEach(seed, paramHandler, resultListener);
-		runSelection(seed, paramHandler, resultListener);
-		runAggregate(seed, paramHandler, resultListener);
 	}
 
 	delete resultListener;
@@ -956,50 +933,55 @@ void runWinEach(int seed, ParamHandler *paramHandler, EvalResultListener *result
 	getPercTimeFile(minTimeFile, name, seed);
 	paramHandler->setDefaultParameters();
 	paramHandler->setCaseStudy(LENGTH_STUDY);
-	paramHandler->setNumRules(1000);
-	paramHandler->setPubNum(20000);
-	paramHandler->setNumRulePredicates(2);
+	paramHandler->setNumRules(650);
+	paramHandler->setNumRulePredicates(3);
 
 	paramHandler->setEachPerc(100);
 	paramHandler->setFirstPerc(0);
 	paramHandler->setLastPerc(0);
 
-	paramHandler->setNumDefinitions(100);
-	paramHandler->setNumProc(5);
+	paramHandler->setNumDefinitions(65);
+	paramHandler->setNumProc(8);
 
-	int maxMessagesPerSecond = 5200;
-	int minMessagesPerSecond = 100;
-	int tick = 300;
+	int frequencies[] = {600, 800, 1000, 1500, 2500, 4000};
+	int minMessagesPerSecond = frequencies[0];
 
-	for (int s=minMessagesPerSecond; s<=maxMessagesPerSecond; s+=tick) {
-		paramHandler->setSleepTime(1000000/s);
-		for (int w=2; w<=10; w+=4) {
-			srand(seed+1);
-			cout << endl << "* Msg/s -> " << s << " | Average win size -> " << w << endl;
-			paramHandler->setMinWinSize((w-1)*1000);
-			paramHandler->setMaxWinSize((w+1)*1000);
-			EvaluationRunner runner = EvaluationRunner(paramHandler, resultListener);
-			resultListener->reset();
-			int dropped = runner.startEval();
-			double duration = ((double) paramHandler->getPubNum()*paramHandler->getSleepTime())/1000000.00;
-			resultListener->printToFile(s, throughputFile.data(), duration, (w==2 && s!=minMessagesPerSecond), (w==2));
-			resultListener->printMeanProcTime(s, meanTimeFile.data(), (w==2 && s!=minMessagesPerSecond), (w==2));
-			resultListener->printMinProcTime(s, minTimeFile.data(), (w==2 && s!=minMessagesPerSecond), (w==2));
-			resultListener->printMaxProcTime(s, maxTimeFile.data(), (w==2 && s!=minMessagesPerSecond), (w==2));
-			resultListener->printPercProcTime(s, percTimeFile.data(), (w==2 && s!=minMessagesPerSecond), (w==2));
-			ofstream file;
-			file.open(droppedFile.data(), ios::app);
-			
-			if (w==2) {
-				file << s << "\t" << (dropped*100/paramHandler->getPubNum()) << "\t";
+	for (bool queue_bound : {true, false}) {
+		for (int s : frequencies) {
+			paramHandler->setPubNum(s*60);
+
+			int queue_len = queue_bound ? s / 10 : paramHandler->getPubNum() + 1;
+			paramHandler->setQueueSize(queue_len);
+
+			paramHandler->setSleepTime(1000000/s);
+			for (int w: {2, 6, 10}) {
+				srand(seed+1);
+				cout << endl << "* Msg/s -> " << s << " | Average win size -> " << w << " | Queue len: " << queue_len << endl;
+				paramHandler->setMinWinSize((w-1)*1000);
+				paramHandler->setMaxWinSize((w+1)*1000);
+				EvaluationRunner runner = EvaluationRunner(paramHandler, resultListener);
+				resultListener->reset();
+				int dropped = runner.startEval();
+				double duration = ((double) paramHandler->getPubNum()*paramHandler->getSleepTime())/1000000.00;
+				resultListener->printToFile(s, throughputFile.data(), duration, (w==2 && s!=minMessagesPerSecond), (w==2));
+				resultListener->printMeanProcTime(s, meanTimeFile.data(), (w==2 && s!=minMessagesPerSecond), (w==2));
+				resultListener->printMinProcTime(s, minTimeFile.data(), (w==2 && s!=minMessagesPerSecond), (w==2));
+				resultListener->printMaxProcTime(s, maxTimeFile.data(), (w==2 && s!=minMessagesPerSecond), (w==2));
+				resultListener->printPercProcTime(s, percTimeFile.data(), (w==2 && s!=minMessagesPerSecond), (w==2));
+				ofstream file;
+				file.open(droppedFile.data(), ios::app);
+
+				if (w==2) {
+					file << s << "\t" << (dropped*100/paramHandler->getPubNum()) << "\t";
+				}
+				else if (w<10) {
+					file << (dropped*100/paramHandler->getPubNum()) << "\t";
+				}
+				else {
+					file << (dropped*100/paramHandler->getPubNum()) << "\n";
+				}
+				file.close();
 			}
-			else if (w<10) {
-				file << (dropped*100/paramHandler->getPubNum()) << "\t";
-			}
-			else {
-				file << (dropped*100/paramHandler->getPubNum()) << "\n";
-			}
-			file.close();
 		}
 	}
 }

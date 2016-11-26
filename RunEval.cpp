@@ -943,7 +943,7 @@ void runWinEach(int seed, ParamHandler *paramHandler, EvalResultListener *result
 	paramHandler->setNumDefinitions(65);
 	paramHandler->setNumProc(8);
 
-	int frequencies[] = {600, 800, 1000, 1500, 2500, 4000};
+	int frequencies[] = {1500};
 	int minMessagesPerSecond = frequencies[0];
 
 	for (bool queue_bound : {true, false}) {
@@ -954,7 +954,7 @@ void runWinEach(int seed, ParamHandler *paramHandler, EvalResultListener *result
 			paramHandler->setQueueSize(queue_len);
 
 			paramHandler->setSleepTime(1000000/s);
-			for (int w: {2, 6, 10}) {
+			for (int w: {3, 4, 5, 6, 8, 10, 12}) {
 				srand(seed+1);
 				cout << endl << "* Msg/s -> " << s << " | Average win size -> " << w << " | Queue len: " << queue_len << endl;
 				paramHandler->setMinWinSize((w-1)*1000);
